@@ -1,27 +1,33 @@
 const express = require("express");
 const app = express();
 const mysql = require("mysql");
+const path = require("path");
+
+//Configurando a captura do html
+const baseRule = path.join(__dirname, "template");
 
 // Configurando a captura de dados dos inputs
 app.use(express.urlencoded({extended: true}));
 app.use(express.json())
 
 app.get("/", (req, res) => {
-    res.send("Hellow Word");
+    res.sendFile(`${baseRule}/index.html`);
 });
 
 //inserindo informacao teste no banco
-app.post("/user/create", (req, res) => {
-    const name = "Enzo";
-    const email = "enzo.felipebb78@gmail.com";
-    const password = "1234";
+app.post("/user/save", (req, res) => {
+    const name = req.body.name;
+    const email = req.body.email;
+ 
 
-    const sql = `INSERT INTO info (name, email, password) VALUES ('${name}', '${email}', '${password}')`;
+    const sql = `INSERT INTO correta (name, email) VALUES ('${name}', '${email}')`;
 
     conn.query(sql, (err) => {
         if(err){
             console.log(err);
         }
+        console.log(req.body);
+        res.redirect("/");
     })
 })
 
